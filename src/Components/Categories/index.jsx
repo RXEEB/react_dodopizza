@@ -12,7 +12,7 @@ export const Categories = ({value,onChangeCategory}) => {
       <ul>
         {
           categories.map((categoryName, index) => {
-            return <li onClick={() => onChangeCategory(index)}
+            return <li onClick={() => onChangeCategory(index, categories)}
               className={value === index ? 'active' : ''} key={index}
             >{categoryName}</li>
 
