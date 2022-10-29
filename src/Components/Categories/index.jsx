@@ -1,10 +1,15 @@
 import React from 'react'
+// import { useSelector, useDispatch } from 'react-redux'
+// import { setPage } from '../../Redux/slices/filterSliceW'
 
 export const Categories = ({value,onChangeCategory,}) => {
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
   
 
-  // const [activeIndex, setActiveIndex] = React.useState(0)
+  // const dispatch = useDispatch()
+  // const page = useSelector(state => state.filter.page)
+
+
 
   return (
     <div className="categories">

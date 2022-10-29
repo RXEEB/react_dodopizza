@@ -1,9 +1,18 @@
 import React from 'react'
 import styles from './Pagination.module.scss'
+import { useSelector, useDispatch } from 'react-redux'
+import { setPage } from '../../Redux/slices/filterSlice'
 
-export const Pagination = ({page, onChangePage, }) => {
+export const Pagination = () => {
   
-    
+  const dispatch = useDispatch()
+  const page = useSelector(state => state.filter.page)
+
+  const onChangePage = (i) => {
+    dispatch(setPage(i))
+     
+  }
+   
   return (
     
     <div className={styles.pagination}>

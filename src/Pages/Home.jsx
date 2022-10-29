@@ -1,36 +1,34 @@
 import React from 'react'
+import axios from 'axios'
+import qs from 'qs'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
 
-import { setCategoryId } from '../Redux/slices/filterSlice';
+import { setCategoryId, setFilters, } from '../Redux/slices/filterSlice';
 import { Categories } from '../Components/Categories'
 import { Sort } from '../Components/Sotr'
 import { PizzaBlock } from '../Components/PizzaBlock';
 import { Skeleton } from '../Components/PizzaBlock/Skeleton';
 import { Pagination } from '../Components/Pagination'
-
-
-
-
+import { sortList } from '../Components/Sotr';
 
 export const Home = ({ searchValue }) => {
+  const naviget = useNavigate()
   const dispatch = useDispatch()
-  const {categoryId,sort} = useSelector(state => state.filter)
- 
-  
+  const isSearch = React.useRef(false)
+  const isMounted = React.useRef(false)
+
+  const { categoryId, sort, page } = useSelector(state => state.filter)
 
   const [items, setItems] = React.useState([])
-  const [page, setPage] = React.useState(1)
   const [isLoading, setIsLoading] = React.useState(true)
-  
- 
-  const onClickCategory =(i)=> {
+
+
+  const onClickCategory = (i) => {
     dispatch(setCategoryId(i))
   }
 
-
-
-  useEffect(() => {
+  const fetchPizzas = () => {
     setIsLoading(true)
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc'
     const sotrBy = sort.sortProperty.replace('-', '')
@@ -38,19 +36,55 @@ export const Home = ({ searchValue }) => {
     const search = searchValue ? `&search=${searchValue}` : ''
 
 
-    fetch(`https://6281a8369fac04c654078cb9.mockapi.io/items?page=${page}&limit=8&${category}&sortBy=${sotrBy}&order=${order}${search}`)
-      .then(res => {
-        return res.json()
-      }).then((json) => {
-        setItems(json)
+    axios.get(
+      `https://6281a8369fac04c654078cb9.mockapi.io/items?page=${page}&limit=8&${category}&sortBy=${sotrBy}&order=${order}${search}`
+    )
+      .then((res) => {
+        setItems(res.data)
         setIsLoading(false)
-
       })
+
+  }
+
+  React.useEffect(() => {                       //если изменили параметры и был первый рендер
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortProperty: sort.sortProperty,
+        categoryId: categoryId,
+        page: page,
+      })
+      naviget(`?${queryString}`)
+    }
+    isMounted.current = true
+
+  }, [categoryId, sort.sortProperty, page])
+
+  React.useEffect(() => {                          // если был первый рендер . проверяем url и сохраняем в redux
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1))
+      const sort = sortList.find((obj) => obj.sortProperty === params.sortProperty)
+
+      dispatch(setFilters({
+        ...params,
+        sort,
+      })
+      )
+      isSearch.current = true
+    }
+  }, [])
+
+  React.useEffect(() => {         //  еслибыл первый рендер . запрашиваем items
     window.scrollTo(0, 0)
+    if (!isSearch.current) {
+      fetchPizzas()
+    }
+    isSearch.current = false
+
   }, [categoryId, sort.sortProperty, searchValue, page])
 
   const skeletons = [...new Array(6)].map((_, index) => <Skeleton key={index} />)
   const pizzas = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />)
+
 
   return (
     <div className="container">
@@ -66,11 +100,8 @@ export const Home = ({ searchValue }) => {
           isLoading ? skeletons :
             pizzas
         }
-
-
       </div>
-
-      <Pagination page={page} setPage={setPage} onChangePage={(index) => setPage(index)} />
+      <Pagination />
 
 
     </div>
