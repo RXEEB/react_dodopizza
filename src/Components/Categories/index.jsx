@@ -1,6 +1,6 @@
 import React from 'react'
 // import { useSelector, useDispatch } from 'react-redux'
-// import { setPage } from '../../Redux/slices/filterSliceW'
+// import { setPage } from '../../Redux/slices/filterSlice'
 
 export const Categories = ({value,onChangeCategory,}) => {
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']

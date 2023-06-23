@@ -1,0 +1,63 @@
+.slider {
+    margin-top: 50px;
+    width: 1260px;
+    height: 263px;
+    position: relative;
+  
+
+
+    &__track {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        overflow: hidden;
+        scroll-behavior: smooth;
+ 
+    }
+
+    &__item {
+        min-width: 203px;
+        height: 100%;
+        border-radius: 30px;
+        border: 3px solid #FF6900;
+        transition: .1s;
+        padding: 3px;
+
+        &:not(:last-child) {
+            margin-right: 8.5px;
+        }
+        &_img{
+            border-radius: 30px;
+            width: 100%;
+            height: 100%;
+           
+        }
+    }
+
+    &__btn_prev {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        left: -45px;
+        top: 45%;
+        border: 1px solid #FF6900;
+        color: #FF6900;
+        border-radius: 10px;
+        cursor: pointer;
+      
+}
+
+    &__btn_next {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        right: -45px;
+        top: 45%;
+        border: 1px solid #FF6900;
+        border-radius: 10px;
+        color: #FF6900;
+        cursor: pointer;
+    }
+
+
+}

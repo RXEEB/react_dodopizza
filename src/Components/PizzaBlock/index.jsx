@@ -1,15 +1,31 @@
 import React from 'react'
-
-export const PizzaBlock = ({title,price,imageUrl,id,sizes,types,rating}) => {
-    
-
-const [countPlus, setCountPlus] = React.useState(0)
-const [activeSize, setActivesize] = React.useState(0)
-const [activeType, setActiveType] = React.useState(0)
+import { useSelector,useDispatch} from 'react-redux'
+import { addItem } from '../../Redux/slices/cartSlice'
 
 const typesName = ['Тонкое', 'Традиционное']
 
 
+
+export const PizzaBlock = ({title,price,imageUrl,id,sizes,types,rating}) => {
+    
+const dispatch = useDispatch()
+const cartItem = useSelector(state => state.cart.items.find(obj => obj.id === id))
+const [activeSize, setActivesize] = React.useState(0)
+const [activeType, setActiveType] = React.useState(0)
+
+const addedCount = cartItem ? cartItem.count : 0
+
+const onClickAdd = () => {
+const item = {
+    id,
+    title,
+    price,
+    imageUrl,
+    type: typesName[activeType], 
+    size: sizes[activeSize],
+}
+dispatch(addItem(item))
+}
 
 
     return (
@@ -27,7 +43,7 @@ const typesName = ['Тонкое', 'Традиционное']
                     <li 
                     className={activeType === index ? 'active': ''}
                     onClick ={()=> setActiveType(index)}
-                    key={type.id}
+                    key={type}
                     >{typesName[type]}</li>
                     )}
                 </ul>
@@ -35,15 +51,15 @@ const typesName = ['Тонкое', 'Традиционное']
                     {sizes.map((size, index)=>
                     <li className={activeSize === index ? 'active': ''}
                     onClick ={()=> setActivesize(index)}
-                    key = {size.id}
+                    key = {size}
                     >{size} см.</li>
                     )}
                 </ul>
             </div>
             <div className="pizza-block__bottom">
                 <div className="pizza-block__price">от {price} ₽</div>
-                <button className="button button--outline button--add"
-                 onClick={()=>setCountPlus(countPlus +1) }
+                <button onClick ={onClickAdd} className="button button--outline button--add "
+                
                 >
                     <svg
                         width="12"
@@ -58,7 +74,9 @@ const typesName = ['Тонкое', 'Традиционное']
                         />
                     </svg>
                     <span>Добавить</span>
-                    <i>{countPlus}</i>
+                    {addedCount > 0 &&
+                     <i>{addedCount}</i>
+                     }
                 </button>
             </div>
         </div>

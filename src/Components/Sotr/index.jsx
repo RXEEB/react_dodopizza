@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setSort } from '../../Redux/slices/filterSlice'
+import { selectSort, setSort } from '../../Redux/slices/filterSlice'
 
 
 export const sortList = [
@@ -13,7 +13,8 @@ export const sortList = [
 
 export const Sort = () => {
   const dispatch = useDispatch()
-  const sort = useSelector(state => state.filter.sort)
+  const sort = useSelector(selectSort)
+  const sortRef = React.useRef()
 
   const [open, setOpen] = React.useState(false)
 
@@ -22,16 +23,16 @@ export const Sort = () => {
     setOpen(false)
 
   }
-  const sortRef = React.useRef()
-
-  const hendleOutsideClick = (e) => {
-    if (!e.path.includes(sortRef.current)) {
-      setOpen(false)
-    }
-  }
 
   React.useEffect(() => {
+    const hendleOutsideClick = (event) => {
+      const path = event.path || (event.composedPath && event.composedPath()); // !!!! ПОЧИТАТЬ про composedPath() , path не работает !!!   
+      if (!path.includes(sortRef.current)) {
+        setOpen(false);
+      }
+    };
     document.body.addEventListener('click', hendleOutsideClick)
+    return () => document.body.removeEventListener('click', hendleOutsideClick)
   }, [])
 
   return (
