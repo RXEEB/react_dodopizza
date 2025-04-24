@@ -5,10 +5,18 @@ import { Search } from '../Search'
 import { useSelector} from 'react-redux'
 import {selectCart} from '../../Redux/slices/cartSlice'
 
-export const Header = ({searchValue, setSearchValue}) => {
+interface IHeaderProps {
+  searchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export const Header: React.FC<IHeaderProps> = ({
+  searchValue,
+  setSearchValue
+}: IHeaderProps) => {
 
   const {items, totalPrice} = useSelector(selectCart)
-  const totalCount = items.reduce((sum, item) => sum + item.count, 0)
+  const totalCount = items.reduce((sum: number, item: any) => sum + item.count, 0)
 
   return (
     <div className="header">
@@ -19,7 +27,7 @@ export const Header = ({searchValue, setSearchValue}) => {
         </div>
         <Search searchValue={searchValue } setSearchValue={setSearchValue} />
         <div className="header__cart">
-          <Link to='/cart' href="/cart" className="button button--cart">
+          <Link to='/cart'  className="button button--cart">
             <span>{totalPrice}</span>
             <div className="button__delimiter"></div>
             <svg

@@ -3,12 +3,12 @@ import styles from './Pagination.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import { setPage } from '../../Redux/slices/filterSlice'
 
-export const Pagination = () => {
+export const Pagination: React.FC = () => {
   
   const dispatch = useDispatch()
-  const page = useSelector(state => state.filter.page)
+  const page = useSelector((state: any) => state.filter.page)
 
-  const onChangePage = (i) => {
+  const onChangePage = (i: number) => {
     dispatch(setPage(i))
      
   }

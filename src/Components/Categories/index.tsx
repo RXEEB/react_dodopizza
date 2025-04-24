@@ -1,15 +1,13 @@
 import React from 'react'
-// import { useSelector, useDispatch } from 'react-redux'
-// import { setPage } from '../../Redux/slices/filterSlice'
 
-export const Categories = ({value,onChangeCategory,}) => {
+type CategoriesProps = {
+  value: number;
+  onChangeCategory: (index: number,categories: string[])=> void;
+}
+
+export const Categories:React.FC<CategoriesProps> = ({value,onChangeCategory}) => {
   const categories = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые']
   
-
-  // const dispatch = useDispatch()
-  // const page = useSelector(state => state.filter.page)
-
-
 
   return (
     <div className="categories">

@@ -3,7 +3,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectSort, setSort } from '../../Redux/slices/filterSlice'
 
 
-export const sortList = [
+type SortItem = {
+  name: string;
+  sortProperty: string
+}
+
+export const sortList: SortItem[] = [
   { name: 'популярности ▲', sortProperty: 'rating' },
   { name: 'популярности ▼', sortProperty: '-rating' },
   { name: 'цене ▲', sortProperty: 'price' },
@@ -14,25 +19,29 @@ export const sortList = [
 export const Sort = () => {
   const dispatch = useDispatch()
   const sort = useSelector(selectSort)
-  const sortRef = React.useRef()
+  const sortRef = React.useRef<HTMLDivElement>(null)
 
   const [open, setOpen] = React.useState(false)
 
-  const onClickListItem = (obj) => {
+  const onClickListItem = (obj: any) => {
     dispatch(setSort(obj))
     setOpen(false)
 
   }
 
   React.useEffect(() => {
-    const hendleOutsideClick = (event) => {
-      const path = event.path || (event.composedPath && event.composedPath()); // !!!! ПОЧИТАТЬ про composedPath() , path не работает !!!   
-      if (!path.includes(sortRef.current)) {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const path = event.composedPath();
+      if (sortRef.current && !path.includes(sortRef.current)) {
         setOpen(false);
       }
     };
-    document.body.addEventListener('click', hendleOutsideClick)
-    return () => document.body.removeEventListener('click', hendleOutsideClick)
+
+    document.body.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.body.removeEventListener('click', handleOutsideClick);
+    };
   }, [])
 
   return (

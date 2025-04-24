@@ -24,6 +24,7 @@
     &:not(:last-child) {
       margin-right: 8.5px;
     }
+
     &_img {
       border-radius: 30px;
       width: 100%;
@@ -54,4 +55,15 @@
     color: #ff6900;
     cursor: pointer;
   }
+}
+
+.slider__btn_prev,
+.slider__btn_next {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.slider__btn_prev.visible,
+.slider__btn_next.visible {
+  opacity: 1;
 }

@@ -1,17 +1,21 @@
 import React from 'react'
 import styles from './search.module.scss'
 
+type SearchValueProps = {
+    searchValue: string;
+    setSearchValue: (value: string ) => void;
+}
 
-export const Search = ({ searchValue, setSearchValue }) => {
-    const inputRef = React.useRef()
+export const Search: React.FC<SearchValueProps> = ({ searchValue, setSearchValue }) => {
+    const inputRef = React.useRef<HTMLInputElement>(null)
 
     const onClickClear = () => {
         setSearchValue('')
-        inputRef.current.focus()
+        inputRef.current?.focus()
       
 
     }
-    const onChangeInput = (event) => {
+    const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(event.target.value)
     }
 

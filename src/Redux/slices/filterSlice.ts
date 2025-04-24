@@ -1,6 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from '../store'
 
-const initialState = {
+
+export type Sort = {
+  name: string;
+  sortProperty: 'rating' | 'title' | 'price' | '-rating' | '-title' | '-price';
+}
+
+export interface FilterSliseStete {
+  categoryId: number;
+  sort: Sort;
+  page: number;
+}
+
+
+
+const initialState: FilterSliseStete = {
   categoryId: 0,
   sort: {
     name: 'популярности',
@@ -13,17 +28,17 @@ export const filterSlice = createSlice({
   name: 'filters',
   initialState,
   reducers: {
-    setCategoryId(state, action) {
+    setCategoryId(state, action: PayloadAction<number>) {
       state.categoryId = action.payload
 
     },
-    setSort(state, action) {
+    setSort(state, action: PayloadAction<Sort>) {
       state.sort = action.payload
     },
-    setPage(state, action) {
+    setPage(state, action: PayloadAction<number>) {
       state.page = action.payload
     },
-    setFilters(state, action) {
+    setFilters(state, action: PayloadAction<FilterSliseStete>) {
       state.sort = action.payload.sort                   // qs react парсинг
       state.page = Number(action.payload.page)
       state.categoryId = Number(action.payload.categoryId)
@@ -32,7 +47,7 @@ export const filterSlice = createSlice({
   },
 })
 
-export const selectSort = (state) => state.filter.sort
+export const selectSort = (state: RootState) => state.filter.sort
 export const { setCategoryId, setSort, setPage, setFilters } = filterSlice.actions
 
 

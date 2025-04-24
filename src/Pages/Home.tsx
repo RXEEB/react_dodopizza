@@ -2,7 +2,7 @@ import React from 'react'
 import qs from 'qs'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
-
+import { RootState } from '../Redux/store'
 import { setCategoryId, setFilters, setPage } from '../Redux/slices/filterSlice';
 import { fetchPizzas } from '../Redux/slices/pizzaSlice';
 import { Categories } from '../Components/Categories'
@@ -13,17 +13,22 @@ import { Pagination } from '../Components/Pagination'
 import { sortList } from '../Components/Sotr';
 import { ContentError } from '../Components/ContentError'
 import { Slider } from '../Components/Slider'
+import { useAppDispatch } from '../Redux/store';
 
-export const Home = ({ searchValue }) => {
+type SearchValueProps = {
+  searchValue: string;
+}
+
+export const Home: React.FC<SearchValueProps> = ({ searchValue }) => {
   const naviget = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const isSearch = React.useRef(false)
   const isMounted = React.useRef(false)
 
-  const { categoryId, sort, page } = useSelector(state => state.filter)
-  const { items, status } = useSelector(state => state.pizza)
+  const { categoryId, sort, page } = useSelector((state: RootState) => state.filter)
+  const { items, status } = useSelector((state: RootState) => state.pizza)
 
-  const onClickCategory = (i) => {
+  const onClickCategory = (i: number) => {
     dispatch(setCategoryId(i))
     dispatch(setPage(1))
   }
@@ -32,7 +37,7 @@ export const Home = ({ searchValue }) => {
 
 
     const order = sort.sortProperty.includes('-') ? 'asc' : 'desc'
-    const sotrBy = sort.sortProperty.replace('-', '')
+    const sortBy = sort.sortProperty.replace('-', '')
     const category = categoryId > 0 ? `category=${categoryId}` : ''
     const search = searchValue ? `&search=${searchValue}` : ''
 
@@ -40,7 +45,7 @@ export const Home = ({ searchValue }) => {
 
     dispatch(fetchPizzas({
       order,
-      sotrBy,
+      sortBy,
       category,
       search,
       page,
@@ -64,7 +69,7 @@ export const Home = ({ searchValue }) => {
 
   React.useEffect(() => {                          // если был первый рендер . проверяем url и сохраняем в redux
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1))
+      const params: any = qs.parse(window.location.search.substring(1)) as unknown
       const sort = sortList.find((obj) => obj.sortProperty === params.sortProperty)
 
       dispatch(setFilters({
@@ -87,7 +92,7 @@ export const Home = ({ searchValue }) => {
   const skeletons = [...new Array(8)].map((_, index) => <Skeleton key={index} />)
   const pizzas = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />)
 
-
+  console.log(items)
   return (
     <div className="container">
       <div className="content__top">
@@ -106,13 +111,5 @@ export const Home = ({ searchValue }) => {
   )
 }
 
- // filter((obj) => {
-  //   if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {                 // Локальный поиск.
-  //     return true
-  //   }
-  //   return false
-  // }).map((obj) => <PizzaBlock {...obj} key={obj.id} />)
 
-
-  // https://6352d329d0bca53a8eb5fae8.mockapi.io/items                  // доп. ключ  mockapi 
 

@@ -2,13 +2,13 @@ import React from 'react';
 import './scss/app.scss'
 import './App.css';
 import { Routes, Route } from "react-router-dom";
-import { Header } from './Components/Header/';
+import { Header } from './Components/Header';
 import { Home } from './Pages/Home';
 import { Cart } from './Pages/Cart';
 import { NotFound } from './Pages/NotFound'
 
 
-function App() {
+export const App: React.FC =()=> {
   const [searchValue, setSearchValue] = React.useState('')
   
 
@@ -30,4 +30,4 @@ function App() {
   );
 }
 
-export default App;
+// export default App;
